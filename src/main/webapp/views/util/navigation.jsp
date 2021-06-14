@@ -4,11 +4,11 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Médiathèque de POLYTECH</a>
+                <a class="navbar-brand" href="#">Permis facile</a>
             </div>
-            <p class="navbar-text">Gestion de l'exposition 2020</p>
             <ul class="nav navbar-nav">
-                <li><a href="index.htm"> <span class="glyphicon glyphicon-home"></span> Accueil</a></li>
+                <li><a href="/"> <span class="glyphicon glyphicon-home"></span> Accueil </a></li>
+
                 <c:if test="${sessionScope.id == null }">
                 <li class="dropdown">
                     <a class="nav navbar-nav navbar-right"  href="login.htm">
@@ -16,8 +16,10 @@
                         Se Connecter
                         <span class="caret"></span>
                     </a>
-                    </c:if>
-                    <c:if test="${sessionScope.id > 0  }">
+                </li>
+                </c:if>
+
+                <c:if test="${sessionScope.id > 0  }">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span class="glyphicon glyphicon-user"></span>
@@ -32,7 +34,6 @@
                 </li>
                 <li><a href="javascript:fermer()"><span class="glyphicon glyphicon-log-out"></span> Quitter</a></li>
                 </c:if>
-
             </ul>
         </div>
     </nav>

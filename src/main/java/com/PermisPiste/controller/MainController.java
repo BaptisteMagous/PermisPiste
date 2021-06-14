@@ -61,7 +61,7 @@ public class MainController {
     @GetMapping("/getListApprenant")
     public String getListApprenant(Model model) throws Exception {
         model.addAttribute("apprenants",learnerRepository.findAll());
-        return "listApprenant";
+        return "apprenant/liste";
     }
 
     @GetMapping("/getApprenant/{id}")
