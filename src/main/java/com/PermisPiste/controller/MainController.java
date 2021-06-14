@@ -7,7 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +39,10 @@ public class MainController {
         action.setWording(wording);
         action.setScoreMinimum(scoreMinimum);
         return actionRepository.save(action);
+    }
+
+    @GetMapping("/")
+    public ModelAndView showIndex(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return new ModelAndView("index");
     }
 }
