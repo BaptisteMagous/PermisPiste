@@ -1,51 +1,45 @@
 package com.PermisPiste.entity;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 
+
 @Entity
-@Table(name = "action__mission", schema = "projetpermis")
-@IdClass(ActionMissionPK.class)
+@Table(name = "action__mission")
 public class ActionMission {
-    private int fkAction;
-    private int fkMission;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_action", referencedColumnName="id")
+    private Action fk_action;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_mission", referencedColumnName="id")
+    private Mission fk_mission;
     @Id
-    @Column(name = "fk_action", nullable = false)
-    public int getFkAction() {
-        return fkAction;
+    private Integer id;
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setFkAction(int fkAction) {
-        this.fkAction = fkAction;
+    public Integer getId() {
+        return id;
     }
 
-    @Id
-    @Column(name = "fk_mission", nullable = false)
-    public int getFkMission() {
-        return fkMission;
+    public Action getFk_action() {
+        return fk_action;
     }
 
-    public void setFkMission(int fkMission) {
-        this.fkMission = fkMission;
+    public void setFk_action(Action fk_action) {
+        this.fk_action = fk_action;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ActionMission that = (ActionMission) o;
-
-        if (fkAction != that.fkAction) return false;
-        if (fkMission != that.fkMission) return false;
-
-        return true;
+    public Mission getFk_mission() {
+        return fk_mission;
     }
 
-    @Override
-    public int hashCode() {
-        int result = fkAction;
-        result = 31 * result + fkMission;
-        return result;
+    public void setFk_mission(Mission fk_mission) {
+        this.fk_mission = fk_mission;
     }
 }

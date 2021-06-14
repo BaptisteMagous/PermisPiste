@@ -1,50 +1,58 @@
 package com.PermisPiste.entity;
 
+import com.sun.istack.NotNull;
+
 import java.sql.Date;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "inscription")
 public class Inscription {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_learner", referencedColumnName="id")
+    private Learner fk_learner;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_mission", referencedColumnName="id")
+    private Mission fk_mission;
+
+    @Column(nullable = true, name = "date")
     private Date date;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "date", nullable = true)
+    public Learner getFk_learner() {
+        return fk_learner;
+    }
+
+    public void setFk_learner(Learner fk_learner) {
+        this.fk_learner = fk_learner;
+    }
+
+    public Mission getFk_mission() {
+        return fk_mission;
+    }
+
+    public void setFk_mission(Mission fk_mission) {
+        this.fk_mission = fk_mission;
+    }
+
     public Date getDate() {
         return date;
     }
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Inscription that = (Inscription) o;
-
-        if (id != that.id) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        return result;
     }
 }

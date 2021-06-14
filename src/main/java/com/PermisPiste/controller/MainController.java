@@ -69,5 +69,8 @@ public class MainController {
             model.addAttribute("apprenant",learner.get());
             return "getApprenant";
         }
+        else{
+            return null;
+        }
     }
 }

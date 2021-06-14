@@ -1,49 +1,34 @@
 package com.PermisPiste.entity;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
+@Table(name = "mission")
 public class Mission {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull
+    @Column(name = "wording", nullable = true, length = 25)
     private String wording;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "wording", nullable = true, length = 25)
     public String getWording() {
         return wording;
     }
 
     public void setWording(String wording) {
         this.wording = wording;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Mission mission = (Mission) o;
-
-        if (id != mission.id) return false;
-        if (wording != null ? !wording.equals(mission.wording) : mission.wording != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (wording != null ? wording.hashCode() : 0);
-        return result;
     }
 }
