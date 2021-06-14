@@ -1,9 +1,11 @@
 package com.PermisPiste.controller;
 
 import com.PermisPiste.entity.Action;
-import com.PermisPiste.repository.ActionRepository;
+import com.PermisPiste.entity.Learner;
+import com.PermisPiste.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,12 +13,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class MainController {
 
     @Autowired
     private ActionRepository actionRepository;
+    @Autowired
+    private IndicatorRepository indicatorRepository;
+    @Autowired
+    private InscriptionRepository inscriptionRepository;
+    @Autowired
+    private LearnerRepository learnerRepository;
+    @Autowired
+    private MissionRepository missionRepository;
 
     @GetMapping("/actions")
     @ResponseBody
@@ -41,6 +52,22 @@ public class MainController {
 
     @GetMapping("/")
     public String showIndex(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.getParameter("blablabla");
         return "index";
+    }
+
+    @GetMapping("/getListApprenant")
+    public String getListApprenant(Model model) throws Exception {
+        model.addAttribute("apprenants",learnerRepository.findAll());
+        return "listApprenant";
+    }
+
+    @GetMapping("/getApprenant/{id}/")
+    public String getApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
+        Optional<Learner> learner = learnerRepository.findById(id);
+        if(learner.isPresent()) {
+            model.addAttribute("apprenant",learner.get());
+            return "getApprenant";
+        }
     }
 }
