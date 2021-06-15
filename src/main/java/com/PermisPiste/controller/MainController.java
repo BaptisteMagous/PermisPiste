@@ -381,9 +381,32 @@ public class MainController {
             return GetAction(action.get().getId(), model);
         }
         else{
-            model.addAttribute("error","Action introuvable");
+            model.addAttribute("error","Indicateur introuvable");
             return "Erreur";
         }
+
+    }
+
+    @RequestMapping(value="/indicator/{id}/update", method = RequestMethod.POST)
+    public String UpdateIndicator(@PathVariable("id") Integer id,
+                               @RequestParam(name = "wording") String wording,
+                                  @RequestParam(name = "valueifcheck") Integer valueifcheck,
+                                  @RequestParam(name = "valueifuncheck") Integer valueifuncheck,
+                               Model model) throws Exception {
+        Optional<Indicator> optionalIndicator = indicatorRepository.findById(id);
+        if(optionalIndicator.isPresent()){
+            Indicator indicator = optionalIndicator.get();
+            indicator.setWording(wording);
+            indicator.setValueIfCheck(valueifcheck);
+            indicator.setValueIfUnCheck(valueifuncheck);
+            indicatorRepository.save(indicator);
+            return GetAction(indicator.getFk_action().getId(), model);
+        }
+        else{
+            model.addAttribute("error","Indicateur introuvable");
+            return "Erreur";
+        }
+
 
     }
 
