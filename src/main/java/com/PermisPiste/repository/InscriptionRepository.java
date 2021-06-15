@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface InscriptionRepository extends JpaRepository<Inscription, Integer> {
     @Query(value = "SELECT * FROM inscription WHERE fk_learner = ?1", nativeQuery = true)
-    List<Inscription> findByLearner(Integer learner_id);
+    List<Inscription> getInscriptionOfLearner(Integer learner_id);
 }

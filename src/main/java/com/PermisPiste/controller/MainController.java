@@ -69,7 +69,7 @@ public class MainController {
         Optional<Learner> learner = learnerRepository.findById(id);
         if(learner.isPresent()) {
             model.addAttribute("learner",learner.get());
-            model.addAttribute("inscriptions",inscriptionRepository.findByLearner(id));
+            model.addAttribute("inscriptions",inscriptionRepository.getInscriptionOfLearner(id));
         }
         else{
             model.addAttribute("error","Apprennant introuvable");
@@ -183,7 +183,7 @@ public class MainController {
             Mission mission = optionalMission.get();
             mission.setWording(wording);
 
-            model.addAttribute("result", learnerRepository.save(learner));
+            model.addAttribute("result", missionRepository.save(mission));
         }
         else{
             model.addAttribute("error","Mission introuvable");
