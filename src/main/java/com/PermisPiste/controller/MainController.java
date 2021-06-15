@@ -292,9 +292,9 @@ public class MainController {
         return GetAction(id, model);
     }
 
-    @GetMapping("/action/create/{wording}/{scoreMinimum}")
-    public String CreateAction(@PathVariable("wording") String wording,
-                               @PathVariable("scoreMinimum") Integer scoreMinimum,
+    @RequestMapping(value="/action/create", method = RequestMethod.POST)
+    public String CreateAction(@RequestParam(name = "wording") String wording,
+                               @RequestParam(name = "scoreMinimum") Integer scoreMinimum,
                                Model model) throws Exception {
         Action action = new Action();
         action.setWording(wording);
