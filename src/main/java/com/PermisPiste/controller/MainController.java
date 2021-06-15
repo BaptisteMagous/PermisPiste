@@ -1,9 +1,7 @@
 package com.PermisPiste.controller;
 
 import com.PermisPiste.domains.LogiParam;
-import com.PermisPiste.entity.Action;
-import com.PermisPiste.entity.Learner;
-import com.PermisPiste.entity.Mission;
+import com.PermisPiste.entity.*;
 import com.PermisPiste.repository.*;
 import com.PermisPiste.service.AuthentificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Controller
 public class MainController {
@@ -28,6 +27,8 @@ public class MainController {
     private IndicatorRepository indicatorRepository;
     @Autowired
     private InscriptionRepository inscriptionRepository;
+    @Autowired
+    private InscriptionActionRepository inscriptionActionRepository;
     @Autowired
     private LearnerRepository learnerRepository;
     @Autowired
@@ -185,14 +186,58 @@ public class MainController {
         return GetMission(id, model);
     }
 
-    @GetMapping("/createMission/{wording}")
-    public String CreateMission(@PathVariable("wording") String wording, Model model){
-        Mission mission = new Mission();
-        mission.setWording(wording);
+    @GetMapping("/mission/{id}/register")
+    public String RegisterToMission(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Integer id, Model model) throws Exception {
+        System.out.println("Registering......................................................");
+        HttpSession session = request.getSession();
+        Random random = new Random();
 
-        model.addAttribute("result",missionRepository.save(mission));
+        Optional<Mission> optionalMission = missionRepository.findById(id);
+        if(!optionalMission.isPresent()) {
+            request.setAttribute("MesErreurs", "Mission introuvable");
+            return "Erreur";
+        }
 
-        return "mission/created";
+        if(session.getAttribute("id") == null) {
+            request.setAttribute("MesErreurs", "Non connecté");
+            return "Erreur";
+        }
+        Optional<Learner> optionalLearner = learnerRepository.findById((Integer) session.getAttribute("id"));
+        if(!optionalLearner.isPresent()) {
+            request.setAttribute("MesErreurs", "Non connecté");
+            return "Erreur";
+        }
+
+
+        Inscription inscription = new Inscription();
+        inscription.setFk_mission(optionalMission.get());
+        inscription.setFk_learner(optionalLearner.get());
+        inscription = inscriptionRepository.save(inscription);
+
+        List<Action> actions = actionRepository.getActionOfMission(optionalMission.get().getId());
+        int score, i = 0;
+        for (Action action: actions) {
+            InscriptionAction inscriptionAction = new InscriptionAction();
+            inscriptionAction.setFk_inscription(inscription);
+            inscriptionAction.setFk_action(action);
+            inscriptionAction.setSort(i++);
+
+            List<Indicator> indicators = indicatorRepository.getIndicatorsOfAction(action.getId());
+            score = 0;
+            for (Indicator indicator: indicators) {
+                if(random.nextBoolean()){
+                    score += indicator.getValueIfCheck();
+                }else{
+                    score += indicator.getValueIfUnCheck();
+                }
+            }
+            inscriptionAction.setScore(score);
+            inscriptionActionRepository.save(inscriptionAction);
+        }
+
+        model.addAttribute("learner", optionalLearner.get());
+        model.addAttribute("inscriptions",inscriptionRepository.getInscriptionOfLearner((Integer) session.getAttribute("id")));
+        return "apprenant/voir";
     }
 
     @GetMapping("/deleteMission/{id}")
@@ -218,7 +263,7 @@ public class MainController {
             model.addAttribute("error","Mission introuvable");
         }
 
-        return "mission/updated";
+        return "mission/voir";
     }
 
     // endregion [- Mission -]
