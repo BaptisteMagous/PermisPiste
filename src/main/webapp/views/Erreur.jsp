@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 
-<%@include file="header.jsp" %>
+<%@include file="util/header.jsp" %>
 <body>
-<%@include file="navigation.jsp"%>
+<%@include file="util/navigation.jsp"%>
 <div class="col-md-12 well well-md">
     <center><h1>Gestion des erreurs </h1></center>
 </div>
@@ -30,7 +30,7 @@
         location.href = "/";
     }
 </script>
-<%@include file="footer.jsp"%>
+<%@include file="util/footer.jsp"%>
 </body>
 </html>
 

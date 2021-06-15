@@ -22,15 +22,15 @@
                 <td>${mission.id}</td>
                 <td>${mission.wording}</td>
                 <td>
-                    <a class="btn btn-primary" href="mission/${mission.id}" role="button">
-                        <span class="glyphicon glyphicon-ok-sign"></span>
-                        Choisir
+                    <a class="btn btn-primary" href="/mission/${mission.id}" role="button">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        Voir
                     </a>
-                    <a class="btn btn-warning" href="mission/${mission.id}/update" role="button">
+                    <a class="btn btn-warning" href="/mission/${mission.id}/update" role="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Modifier
                     </a>
-                    <a class="btn btn-danger" href="mission/${mission.id}/delete" role="button">
+                    <a class="btn btn-danger" href="/mission/${mission.id}/delete" role="button">
                         <span class="glyphicon glyphicon-remove-circle"></span>
                         Supprimer
                     </a>
@@ -41,7 +41,7 @@
 </div>
 
 <div class="container">
-    <a class="btn btn-success" href="mission/new" role="button">
+    <a class="btn btn-success" href="/mission/new" role="button">
         <span class="glyphicon glyphicon-plus"></span>
         Ajouter
     </a>

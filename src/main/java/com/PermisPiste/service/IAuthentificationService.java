@@ -8,5 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface IAuthentificationService {
 
     public Learner authentification(@RequestBody LogiParam unUti) throws Exception;
+    public void resetPassword(LogiParam unUti, String pwd) throws Exception;
 
 }

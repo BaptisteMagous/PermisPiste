@@ -1,9 +1,11 @@
 package com.PermisPiste.controller;
 
+import com.PermisPiste.domains.LogiParam;
 import com.PermisPiste.entity.Action;
 import com.PermisPiste.entity.Learner;
 import com.PermisPiste.entity.Mission;
 import com.PermisPiste.repository.*;
+import com.PermisPiste.service.AuthentificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,9 @@ public class MainController {
     private LearnerRepository learnerRepository;
     @Autowired
     private MissionRepository missionRepository;
+    @Autowired
+    private AuthentificationService unAuthenService;
+
 /*
     @GetMapping("/actions")
     @ResponseBody
@@ -53,6 +59,17 @@ public class MainController {
 
     @GetMapping("/")
     public String showIndex(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        // code de reset mdp
+        final int ID_USER = 1;
+        final String NEW_MDP = "bob";
+        LogiParam unUtiParam = new LogiParam();
+        Learner l = learnerRepository.findById(ID_USER).orElseThrow(Exception::new);
+        unUtiParam.setNomUtil(l.getForname());
+        unAuthenService.resetPassword(unUtiParam, NEW_MDP);
+
+
+
         return "index";
     }
 

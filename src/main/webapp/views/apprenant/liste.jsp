@@ -35,15 +35,15 @@
                     </c:if>
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="apprenant/${apprenant.id}" role="button">
+                    <a class="btn btn-primary" href="/apprenant/${apprenant.id}" role="button">
                         <span class="glyphicon glyphicon-eye-open"></span>
                         Voir
                     </a>
-                    <a class="btn btn-warning" href="apprenant/${apprenant.id}/update" role="button">
+                    <a class="btn btn-warning" href="/apprenant/${apprenant.id}/update" role="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Modifier
                     </a>
-                    <a class="btn btn-danger" href="apprenant/${apprenant.id}/delete" role="button">
+                    <a class="btn btn-danger" href="/apprenant/${apprenant.id}/delete" role="button">
                         <span class="glyphicon glyphicon-remove-circle"></span>
                         Supprimer
                     </a>
@@ -54,7 +54,7 @@
 </div>
 
 <div class="container">
-    <a class="btn btn-success" href="apprenant/new" role="button">
+    <a class="btn btn-success" href="/apprenant/new" role="button">
         <span class="glyphicon glyphicon-plus"></span>
         Ajouter
     </a>
