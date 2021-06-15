@@ -4,11 +4,13 @@ import com.PermisPiste.domains.LogiParam;
 import com.PermisPiste.entity.*;
 import com.PermisPiste.repository.*;
 import com.PermisPiste.service.AuthentificationService;
+import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -346,6 +348,46 @@ public class MainController {
     }
 
     // endregion [- Actions -]
+
+    // region [- Indicators -]
+
+    @GetMapping("/action/${action_id}/remove/${indicator_id}")
+    public String RemoveIndicator(@PathVariable("action_id") Integer action_id, @PathVariable("indicator_id") Integer indicator_id, Model model) throws Exception {
+        indicatorRepository.deleteById(indicator_id);
+        return GetAction(action_id, model);
+    }
+
+    @GetMapping("/indicator/create/{action_id}")
+    public String GetActionCreation(@PathVariable("action_id") Integer action_id, Model model) throws Exception {
+        return "indicator/create";
+
+    }
+
+    @RequestMapping(value="/indicator/create/{action_id}", method = RequestMethod.POST)
+    public String CreateAction(@PathVariable("action_id") Integer action_id,
+                               @RequestParam(name = "wording") String wording,
+                               @RequestParam(name = "valueifcheck") Integer valueifcheck,
+                               @RequestParam(name = "valueifuncheck") Integer valueifuncheck,
+                               Model model) throws Exception {
+        Optional<Action> action = actionRepository.findById(action_id);
+        if(action.isPresent()) {
+            Indicator indicator = new Indicator();
+            indicator.setFk_action(action.get());
+            indicator.setWording(wording);
+            indicator.setValueIfCheck(valueifcheck);
+            indicator.setValueIfUnCheck(valueifuncheck);
+            indicatorRepository.save(indicator);
+
+            return GetAction(action.get().getId(), model);
+        }
+        else{
+            model.addAttribute("error","Action introuvable");
+            return "Erreur";
+        }
+
+    }
+
+    // endregion [- Indicators -]
 
 
 }
