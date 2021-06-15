@@ -44,7 +44,7 @@ public class MainController {
 
     @GetMapping("/action/{wording}/{scoreMinimum}")
     @ResponseBody
-    public Action showActionById(@PathVariable String wording, @PathVariable Integer scoreMinimum){
+    public Action createAction(@PathVariable String wording, @PathVariable Integer scoreMinimum){
         Action action = new Action();
         action.setWording(wording);
         action.setScoreMinimum(scoreMinimum);
