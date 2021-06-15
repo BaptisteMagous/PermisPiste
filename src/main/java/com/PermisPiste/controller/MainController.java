@@ -7,9 +7,7 @@ import com.PermisPiste.service.AuthentificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,13 +34,13 @@ public class MainController {
     @Autowired
     private AuthentificationService unAuthenService;
 
-/*
-    @GetMapping("/actions")
+    @GetMapping("/test")
     @ResponseBody
-    public List<Action> showAllActions(){
-        return actionRepository.findAll();
+    public String showAllActions(@RequestParam(name = "msg") String msg){
+        return msg;
     }
 
+/*
     @GetMapping("/action/{id}")
     @ResponseBody
     public Action showActionById(@PathVariable Integer id){
@@ -77,7 +75,7 @@ public class MainController {
     // region [- Apprenant -]
 
     @GetMapping("/apprenant/liste")
-    public String getListApprenant(Model model) throws Exception {
+    public String GetListApprenant(Model model) throws Exception {
         model.addAttribute("apprenants",learnerRepository.findAll());
         return "apprenant/liste";
     }
@@ -107,7 +105,7 @@ public class MainController {
                                   @PathVariable("salt") String salt,
                                   @PathVariable("email") String email,
                                   @PathVariable("mdp") String mdp,
-                                  @PathVariable("role") String role, Model model){
+                                  @PathVariable("role") String role, Model model) throws Exception {
         Learner learner = new Learner();
         learner.setSurname(surname);
         learner.setForname(forname);
@@ -116,28 +114,28 @@ public class MainController {
         learner.setMdp(mdp);
 
 
-        model.addAttribute("result",learnerRepository.save(learner));
+        learner = learnerRepository.save(learner);
 
-        return "apprenant/created";
+        return GetApprenant(learner.getId(), model);
     }
 
     @GetMapping("/apprenant/delete/{id}")
-    public String DeleteApprenant(@PathVariable("id") Integer id, Model model){
+    public String DeleteApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
         learnerRepository.deleteById(id);
 
         model.addAttribute("result", !learnerRepository.findById(id).isPresent());
 
-        return "apprenant/deleted";
+        return GetListApprenant(model);
     }
 
-    @GetMapping("/apprenant/{id}/update/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
+    @RequestMapping(value = "/apprenant/{id}/update",method = RequestMethod.POST)
     public String UpdateApprenant(@PathVariable("id") Integer id,
-                                  @PathVariable("surname") String surname,
-                                  @PathVariable("forname") String forname,
-                                  @PathVariable("salt") String salt,
-                                  @PathVariable("email") String email,
-                                  @PathVariable("mdp") String mdp,
-                                  @PathVariable("role") String role, Model model){
+                                  @RequestParam(name = "surname") String surname,
+                                  @RequestParam(name = "forname") String forname,
+                                  @RequestParam(name = "salt") String salt,
+                                  @RequestParam(name = "email") String email,
+                                  @RequestParam(name = "mdp") String mdp,
+                                  @RequestParam(name = "role") String role, Model model) throws Exception {
         Optional<Learner> optionalLearner = learnerRepository.findById(id);
         if(optionalLearner.isPresent()) {
             Learner learner = optionalLearner.get();
@@ -155,7 +153,7 @@ public class MainController {
 
 
 
-        return "apprenant/updated";
+        return GetApprenant(id, model);
     }
 
     // endregion Apprennant
@@ -240,18 +238,18 @@ public class MainController {
         return "apprenant/voir";
     }
 
-    @GetMapping("/deleteMission/{id}")
-    public String DeleteMission(@PathVariable("id") Integer id, Model model){
+    @GetMapping("/mission/{id}/delete")
+    public String DeleteMission(@PathVariable("id") Integer id, Model model) throws Exception {
         missionRepository.deleteById(id);
 
         model.addAttribute("result", !missionRepository.findById(id).isPresent());
 
-        return "mission/deleted";
+        return GetListMission(model);
     }
 
-    @GetMapping("/updateMission/{id}/{wording}")
+    @GetMapping("/mission/{id}/update")
     public String UpdateMission(@PathVariable("id") Integer id,
-                                @PathVariable("wording") String wording, Model model){
+                                @RequestParam(name = "wording") String wording, Model model) throws Exception {
         Optional<Mission> optionalMission = missionRepository.findById(id);
         if(optionalMission.isPresent()) {
             Mission mission = optionalMission.get();
@@ -263,7 +261,7 @@ public class MainController {
             model.addAttribute("error","Mission introuvable");
         }
 
-        return "mission/voir";
+        return GetMission(id, model);
     }
 
     // endregion [- Mission -]
@@ -297,30 +295,29 @@ public class MainController {
     @GetMapping("/action/create/{wording}/{scoreMinimum}")
     public String CreateAction(@PathVariable("wording") String wording,
                                @PathVariable("scoreMinimum") Integer scoreMinimum,
-                               Model model){
+                               Model model) throws Exception {
         Action action = new Action();
         action.setWording(wording);
         action.setScoreMinimum(scoreMinimum);
+        action = actionRepository.save(action);
 
-        model.addAttribute("result",actionRepository.save(action));
-
-        return "action/created";
+        return GetAction(action.getId(), model);
     }
 
     @GetMapping("/action/{id}/delete")
-    public String DeleteAction(@PathVariable("id") Integer id, Model model){
+    public String DeleteAction(@PathVariable("id") Integer id, Model model) throws Exception {
         actionRepository.deleteById(id);
 
         model.addAttribute("result", !actionRepository.findById(id).isPresent());
 
-        return "action/deleted";
+        return GetListAction(model);
     }
 
-    @GetMapping("/action/{id}/update/{wording}/{scoreMinimum}")
+    @RequestMapping(value="/action/{id}/update", method = RequestMethod.POST)
     public String UpdateAction(@PathVariable("id") Integer id,
-                               @PathVariable("wording") String wording,
-                               @PathVariable("scoreMinimum") Integer scoreMinimum,
-                               Model model){
+                               @RequestParam(name = "wording") String wording,
+                               @RequestParam(name = "scoreMinimum") Integer scoreMinimum,
+                               Model model) throws Exception {
         Optional<Action> optionalAction = actionRepository.findById(id);
         if(optionalAction.isPresent()) {
             Action action = optionalAction.get();
@@ -328,12 +325,14 @@ public class MainController {
             action.setScoreMinimum(scoreMinimum);
 
             model.addAttribute("result", actionRepository.save(action));
+            return GetAction(action.getId(), model);
         }
         else{
             model.addAttribute("error","Action introuvable");
+            return "Erreur";
         }
 
-        return "action/updated";
+
     }
 
     // endregion [- Actions -]
