@@ -2,6 +2,7 @@ package com.PermisPiste.controller;
 
 import com.PermisPiste.entity.Action;
 import com.PermisPiste.entity.Learner;
+import com.PermisPiste.entity.Mission;
 import com.PermisPiste.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,9 +53,10 @@ public class MainController {
 
     @GetMapping("/")
     public String showIndex(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.getParameter("blablabla");
         return "index";
     }
+
+    // region [- Apprenant -]
 
     @GetMapping("/getListApprenant")
     public String getListApprenant(Model model) throws Exception {
@@ -63,7 +65,7 @@ public class MainController {
     }
 
     @GetMapping("/getApprenant/{id}")
-    public String getApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
+    public String GetApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
         Optional<Learner> learner = learnerRepository.findById(id);
         if(learner.isPresent()) {
             model.addAttribute("learner",learner.get());
@@ -131,4 +133,124 @@ public class MainController {
 
         return "updateApprennant";
     }
+
+    // endregion Apprennant
+
+    // region [- Mission -]
+    @GetMapping("/getListMission")
+    public String GetListMission(Model model) throws Exception {
+        model.addAttribute("missions", missionRepository.findAll());
+        return "listMissions";
+    }
+
+    @GetMapping("/getMission/{id}")
+    public String GetMission(@PathVariable("id") Integer id, Model model) throws Exception {
+        Optional<Mission> mission = missionRepository.findById(id);
+        if(mission.isPresent()) {
+            model.addAttribute("mission",mission.get());
+            model.addAttribute("actions",actionRepository.getActionOfMission(id));
+        }
+        else{
+            model.addAttribute("error","Mission introuvable");
+        }
+        return "getMission";
+    }
+
+    @GetMapping("/createMission/{wording}")
+    public String CreateMission(@PathVariable("wording") String wording, Model model){
+        Mission mission = new Mission();
+        mission.setWording(wording);
+
+        model.addAttribute("result",missionRepository.save(mission));
+
+        return "createMission";
+    }
+
+    @GetMapping("/deleteMission/{id}")
+    public String DeleteMission(@PathVariable("id") Integer id, Model model){
+        missionRepository.deleteById(id);
+
+        model.addAttribute("result", !missionRepository.findById(id).isPresent());
+
+        return "deleteMission";
+    }
+
+    @GetMapping("/updateMission/{id}/{wording}")
+    public String UpdateMission(@PathVariable("id") Integer id,
+                                @PathVariable("wording") String wording, Model model){
+        Optional<Mission> optionalMission = missionRepository.findById(id);
+        if(optionalMission.isPresent()) {
+            Mission mission = optionalMission.get();
+            mission.setWording(wording);
+
+            model.addAttribute("result", learnerRepository.save(learner));
+        }
+        else{
+            model.addAttribute("error","Mission introuvable");
+        }
+
+        return "updateMission";
+    }
+
+    // endregion [- Mission -]
+
+    // region [- Mission -]
+    @GetMapping("/getListMission")
+    public String GetListMission(Model model) throws Exception {
+        model.addAttribute("missions", missionRepository.findAll());
+        return "listMissions";
+    }
+
+    @GetMapping("/getMission/{id}")
+    public String GetMission(@PathVariable("id") Integer id, Model model) throws Exception {
+        Optional<Mission> mission = missionRepository.findById(id);
+        if(mission.isPresent()) {
+            model.addAttribute("mission",mission.get());
+            model.addAttribute("actions",actionRepository.getActionOfMission(id));
+        }
+        else{
+            model.addAttribute("error","Mission introuvable");
+        }
+        return "getMission";
+    }
+
+    @GetMapping("/createMission/{wording}")
+    public String CreateMission(@PathVariable("wording") String wording, Model model){
+        Mission mission = new Mission();
+        mission.setWording(wording);
+
+        model.addAttribute("result",missionRepository.save(mission));
+
+        return "createMission";
+    }
+
+    @GetMapping("/deleteMission/{id}")
+    public String DeleteMission(@PathVariable("id") Integer id, Model model){
+        missionRepository.deleteById(id);
+
+        model.addAttribute("result", !missionRepository.findById(id).isPresent());
+
+        return "deleteMission";
+    }
+
+    @GetMapping("/updateMission/{id}/{wording}")
+    public String UpdateMission(@PathVariable("id") Integer id,
+                                @PathVariable("wording") String wording, Model model){
+        Optional<Mission> optionalMission = missionRepository.findById(id);
+        if(optionalMission.isPresent()) {
+            Mission mission = optionalMission.get();
+            mission.setWording(wording);
+
+            model.addAttribute("result", learnerRepository.save(learner));
+        }
+        else{
+            model.addAttribute("error","Mission introuvable");
+        }
+
+        return "updateMission";
+    }
+
+    // endregion [- Mission -]
+
+
 }
