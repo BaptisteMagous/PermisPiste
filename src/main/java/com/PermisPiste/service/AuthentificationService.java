@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 @Service
 public class AuthentificationService implements com.PermisPiste.service.IAuthentificationService {
@@ -31,14 +32,20 @@ public class AuthentificationService implements com.PermisPiste.service.IAuthent
             try {
                 // on récupère le sel
                 String sel = learner.getSalt();
+                System.out.println("sel = " + sel);
                 // on récupère le mot de passe
                 String mdp = learner.getMdp();
+                System.out.println("mdp = " + mdp);
                 // on génère le mot de passe avec les données de connexion
                 byte[] salt = MonMotPassHash.transformeEnBytes(sel);
+                System.out.println("salt = " + salt);
                 char[] pwd_char = MonMotPassHash.converttoCharArray(pwd);
+                System.out.println("pwd_char = " + pwd_char);
                 byte[] monpwdCo = MonMotPassHash.generatePasswordHash(pwd_char, salt);
+                System.out.println("monpwdCo = " + monpwdCo);
                 // on récupère le mot de passe enregistré
                 byte[] mdp_byte = MonMotPassHash.transformeEnBytes(mdp.trim());
+                System.out.println("mdp_byte = " + mdp_byte);
                 if (!MonMotPassHash.verifyPassword(monpwdCo, mdp_byte)) {
                     message = "mot de passe erroné";
                     return null;

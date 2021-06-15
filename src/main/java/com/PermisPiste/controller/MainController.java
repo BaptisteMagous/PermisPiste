@@ -155,7 +155,7 @@ public class MainController {
 
 
 
-        return GetApprenant(id, model);
+        return GetApprenantUpdate(id, model);
     }
 
     // endregion Apprennant
@@ -263,7 +263,7 @@ public class MainController {
             model.addAttribute("error","Mission introuvable");
         }
 
-        return GetMission(id, model);
+        return GetMissionUpdate(id, model);
     }
 
     // endregion [- Mission -]
@@ -337,7 +337,7 @@ public class MainController {
             action.setScoreMinimum(scoreMinimum);
 
             model.addAttribute("result", actionRepository.save(action));
-            return GetAction(action.getId(), model);
+            return GetActionUpdate(action.getId(), model);
         }
         else{
             model.addAttribute("error","Action introuvable");
