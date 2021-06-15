@@ -4,13 +4,11 @@ import com.PermisPiste.domains.LogiParam;
 import com.PermisPiste.entity.*;
 import com.PermisPiste.repository.*;
 import com.PermisPiste.service.AuthentificationService;
-import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -356,7 +354,7 @@ public class MainController {
 
     // region [- Indicators -]
 
-    @GetMapping("/action/${action_id}/remove/${indicator_id}")
+    @GetMapping("/action/{action_id}/remove/{indicator_id}")
     public String RemoveIndicator(@PathVariable("action_id") Integer action_id, @PathVariable("indicator_id") Integer indicator_id, Model model) throws Exception {
         indicatorRepository.deleteById(indicator_id);
         return GetAction(action_id, model);
