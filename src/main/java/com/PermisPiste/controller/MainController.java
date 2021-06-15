@@ -358,13 +358,13 @@ public class MainController {
     }
 
     @GetMapping("/indicator/create/{action_id}")
-    public String GetActionCreation(@PathVariable("action_id") Integer action_id, Model model) throws Exception {
+    public String GetIndicatorCreation(@PathVariable("action_id") Integer action_id, Model model) throws Exception {
         return "indicator/create";
 
     }
 
     @RequestMapping(value="/indicator/create/{action_id}", method = RequestMethod.POST)
-    public String CreateAction(@PathVariable("action_id") Integer action_id,
+    public String CreateIndicator(@PathVariable("action_id") Integer action_id,
                                @RequestParam(name = "wording") String wording,
                                @RequestParam(name = "valueifcheck") Integer valueifcheck,
                                @RequestParam(name = "valueifuncheck") Integer valueifuncheck,
