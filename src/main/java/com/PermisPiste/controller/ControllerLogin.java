@@ -53,7 +53,7 @@ public class ControllerLogin {
             Learner learner = unAuthenService.authentification(unUtiParam);
             if (learner != null) {
                 session = request.getSession();
-                session.setAttribute("id", learner.getForname());
+                session.setAttribute("id", learner.getId());
                 destinationPage = "index";
             } else {
                 message = "mot de passe erroné";
