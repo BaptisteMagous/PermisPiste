@@ -286,6 +286,16 @@ public class MainController {
         return "action/voir";
     }
 
+    @GetMapping("/action/create")
+    public String GetActionCreation(Model model) throws Exception {
+        Action action = new Action();
+        action.setWording("");
+        action.setScoreMinimum(0);
+        action = actionRepository.save(action);
+
+        return GetActionUpdate(action.getId(), model);
+    }
+
     @GetMapping("/action/{id}/update")
     public String GetActionUpdate(@PathVariable("id") Integer id, Model model) throws Exception {
         model.addAttribute("updating",true);
