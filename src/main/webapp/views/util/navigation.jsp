@@ -20,18 +20,19 @@
                 </c:if>
 
                 <c:if test="${sessionScope.id > 0  }">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <span class="glyphicon glyphicon-user"></span>
-                        Adhérents
-                        <span class="caret"></span>
-                    </a>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            Mon Espace
+                            <span class="caret"></span>
+                        </a>
 
-                    <ul class="dropdown-menu">
-                        <li><a href="ajouterAdherent.htm"> <span class="glyphicon glyphicon-plus"></span> Ajout Adhérent</a></li>
-                        <li><a href="adherents/listerAdherent.htm"><span class="glyphicon glyphicon-th-list"></span> Lister les adhérents</a></li>
-                    </ul>
-                </li>
+                        <ul class="dropdown-menu">
+                            <li><a href="/mission/liste"><span class="glyphicon glyphicon-th-list"></span> Lister des missions</a></li>
+                            <li><a href="/action/liste"><span class="glyphicon glyphicon-th-list"></span> Lister des actions</a></li>
+                            <li><a href="/apprenant/liste"><span class="glyphicon glyphicon-th-list"></span> Lister des apprenants</a></li>
+                        </ul>
+                    </li>
                 <li><a href="javascript:fermer()"><span class="glyphicon glyphicon-log-out"></span> Quitter</a></li>
                 </c:if>
             </ul>

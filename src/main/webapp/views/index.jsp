@@ -15,6 +15,9 @@
 
     <h1>Bienvenue sur permis facile</h1>
     <h2>Sélectionnez dans le menu la fonctionnalité voulue !</h2>
+    <a href="mission/liste">Liste des missions</a>
+    <a href="action/liste">Liste des actions</a>
+    <a href="apprenant/liste">Liste des apprenants</a>
 </div>
 
 <%@include file="util/footer.jsp"%>
