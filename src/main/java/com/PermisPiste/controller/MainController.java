@@ -62,15 +62,73 @@ public class MainController {
         return "listApprenant";
     }
 
-    @GetMapping("/getApprenant/{id}/")
+    @GetMapping("/getApprenant/{id}")
     public String getApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
         Optional<Learner> learner = learnerRepository.findById(id);
         if(learner.isPresent()) {
-            model.addAttribute("apprenant",learner.get());
-            return "getApprenant";
+            model.addAttribute("learner",learner.get());
+            model.addAttribute("inscriptions",inscriptionRepository.findByLearner(id));
         }
         else{
-            return null;
+            model.addAttribute("error","Apprennant introuvable");
         }
+        return "getApprenant";
+    }
+
+    @GetMapping("/createApprenant/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
+    public String CreateApprenant(@PathVariable("surname") String surname,
+                                  @PathVariable("forname") String forname,
+                                  @PathVariable("salt") String salt,
+                                  @PathVariable("email") String email,
+                                  @PathVariable("mdp") String mdp,
+                                  @PathVariable("role") String role, Model model){
+        Learner learner = new Learner();
+        learner.setSurname(surname);
+        learner.setForname(forname);
+        learner.setSalt(salt);
+        learner.setEmail(email);
+        learner.setMdp(mdp);
+
+
+        model.addAttribute("result",learnerRepository.save(learner));
+
+        return "createApprennant";
+    }
+
+    @GetMapping("/deleteApprenant/{id}")
+    public String DeleteApprenant(@PathVariable("id") Integer id, Model model){
+        learnerRepository.deleteById(id);
+
+        model.addAttribute("result", !learnerRepository.findById(id).isPresent());
+
+        return "deleteApprennant";
+    }
+
+    @GetMapping("/updateApprenant/{id}/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
+    public String UpdateApprenant(@PathVariable("id") Integer id,
+                                  @PathVariable("surname") String surname,
+                                  @PathVariable("forname") String forname,
+                                  @PathVariable("salt") String salt,
+                                  @PathVariable("email") String email,
+                                  @PathVariable("mdp") String mdp,
+                                  @PathVariable("role") String role, Model model){
+        Optional<Learner> optionalLearner = learnerRepository.findById(id);
+        if(optionalLearner.isPresent()) {
+            Learner learner = optionalLearner.get();
+            learner.setSurname(surname);
+            learner.setForname(forname);
+            learner.setSalt(salt);
+            learner.setEmail(email);
+            learner.setMdp(mdp);
+
+            model.addAttribute("result", learnerRepository.save(learner));
+        }
+        else{
+            model.addAttribute("error","Apprennant introuvable");
+        }
+
+
+
+        return "updateApprennant";
     }
 }
