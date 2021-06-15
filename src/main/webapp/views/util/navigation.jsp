@@ -11,7 +11,7 @@
 
                 <c:if test="${sessionScope.id == null }">
                 <li class="dropdown">
-                    <a class="nav navbar-nav navbar-right"  href="login.htm">
+                    <a class="nav navbar-nav navbar-right"  href="login">
                         <span class="glyphicon glyphicon-user"></span>
                         Se Connecter
                         <span class="caret"></span>

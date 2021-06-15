@@ -207,7 +207,7 @@ public class MainController {
     // endregion [- Mission -]
 
     // region [- Action -]
-    @GetMapping("/action")
+    @GetMapping("/action/liste")
     public String GetListAction(Model model) throws Exception {
         model.addAttribute("actions", actionRepository.findAll());
         return "action/liste";
