@@ -6,7 +6,15 @@
 <%@include file="../util/navigation.jsp" %>
 <div class="jumbotron text-center">
     <h1>Mission ${mission.id}</h1><br>
-    <form action="/mission/${mission.id}/update" method="post">
+    <form action="/mission/${mission.id}/update"
+            <c:if test="${role eq \"admin\" and updating}">
+                method="post"
+            </c:if>
+            <c:if test="${role eq \"admin\" and !updating}">
+                method="get"
+            </c:if>
+            >
+
         <div class="row">
             <div class="col-md-1">
                 <label for="wording">Objectif</label>
@@ -14,7 +22,7 @@
             <div class="col-md-10">
                 <input type="text" class="form-control" name="wording" id="wording" value="${mission.wording}" <c:if test="${!updating}">disabled</c:if> />
             </div>
-            <c:if test="${role eq \"admin\" and updating}">
+            <c:if test="${role eq \"admin\"}">
                 <div class="col-md-1">
                     <input type="submit" class="btn btn-success" value="Modifier">
                 </div>
@@ -42,15 +50,17 @@
                             <span class="glyphicon glyphicon-eye-open"></span>
                             Voir
                         </a>
+                        <c:if test="${role eq \"admin\"}">
                         <c:if test="${updating}">
                             <a class="btn btn-warning" href="/action/${action.id}/update" role="button">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 Modifier
                             </a>
-                            <a class="btn btn-danger" href="/mission/${mission.id}/remove/${action.id}" role="button">
+                            <a class="btn btn-danger" href="/action/${action.id}/delete" role="button">
                                 <span class="glyphicon glyphicon-ban-circle"></span>
                                 Retirer
                             </a>
+                        </c:if>
                         </c:if>
                     </td>
                 </c:if>
@@ -68,14 +78,14 @@
             <span class="glyphicon glyphicon-pushpin"></span>
             Ajouter existant
         </a>
-        <a class="btn btn-success" href="/mission/${mission.id}/add/new" role="button">
+        <a class="btn btn-success" href="/mission/${mission.id}/createAction" role="button">
             <span class="glyphicon glyphicon-plus"></span>
             Créer
         </a>
     </c:if>
 
     <c:if test="${role ne \"admin\"}">
-        <a class="btn btn-success" href="/mission/${mission.id}/start" role="button">
+        <a class="btn btn-success" href="/mission/${mission.id}/register" role="button">
             <span class="glyphicon glyphicon-ok-circle"></span>
             Accepter
         </a>

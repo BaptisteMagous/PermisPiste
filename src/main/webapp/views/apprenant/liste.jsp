@@ -39,6 +39,7 @@
                         <span class="glyphicon glyphicon-eye-open"></span>
                         Voir
                     </a>
+                    <c:if test="${role eq \"admin\"}">
                     <a class="btn btn-warning" href="/apprenant/${apprenant.id}/update" role="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Modifier
@@ -47,6 +48,7 @@
                         <span class="glyphicon glyphicon-remove-circle"></span>
                         Supprimer
                     </a>
+                    </c:if>
                 </td>
             </tr>
         </c:forEach>

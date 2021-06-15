@@ -9,4 +9,6 @@ import java.util.List;
 
 @Repository
 public interface InscriptionActionRepository extends JpaRepository<InscriptionAction, Integer> {
+    @Query(value = "SELECT * FROM inscription__action WHERE fk_inscription = ?1", nativeQuery = true)
+    List<InscriptionAction>  getActionDuringInscription(Integer fk_inscription);
 }

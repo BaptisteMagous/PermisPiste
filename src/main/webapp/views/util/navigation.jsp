@@ -39,3 +39,11 @@
         </div>
     </nav>
 </div>
+
+<c:if test="${message != null}">
+<div class="alert alert-success fade in">
+    <div class="col-md-3 ">
+        <c:out value="${message}" />
+    </div>
+</div>
+</c:if>

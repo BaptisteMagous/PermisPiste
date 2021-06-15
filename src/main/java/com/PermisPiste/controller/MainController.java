@@ -22,6 +22,8 @@ public class MainController {
     @Autowired
     private ActionRepository actionRepository;
     @Autowired
+    private ActionMissionRepository actionMissionRepository;
+    @Autowired
     private IndicatorRepository indicatorRepository;
     @Autowired
     private InscriptionRepository inscriptionRepository;
@@ -84,7 +86,7 @@ public class MainController {
     public String GetApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
         Optional<Learner> learner = learnerRepository.findById(id);
         if(learner.isPresent()) {
-            model.addAttribute("learner",learner.get());
+            model.addAttribute("apprenant",learner.get());
             model.addAttribute("inscriptions",inscriptionRepository.getInscriptionOfLearner(id));
         }
         else{
@@ -94,7 +96,7 @@ public class MainController {
         return "apprenant/voir";
     }
 
-    @GetMapping("/apprenant/update/{id}")
+    @GetMapping("/apprenant/{id}/update")
     public String GetApprenantUpdate(@PathVariable("id") Integer id, Model model) throws Exception {
         model.addAttribute("updating",true);
         return GetApprenant(id, model);
@@ -133,18 +135,14 @@ public class MainController {
     public String UpdateApprenant(@PathVariable("id") Integer id,
                                   @RequestParam(name = "surname") String surname,
                                   @RequestParam(name = "forname") String forname,
-                                  @RequestParam(name = "salt") String salt,
                                   @RequestParam(name = "email") String email,
-                                  @RequestParam(name = "mdp") String mdp,
-                                  @RequestParam(name = "role") String role, Model model) throws Exception {
+                                  Model model) throws Exception {
         Optional<Learner> optionalLearner = learnerRepository.findById(id);
         if(optionalLearner.isPresent()) {
             Learner learner = optionalLearner.get();
             learner.setSurname(surname);
             learner.setForname(forname);
-            learner.setSalt(salt);
             learner.setEmail(email);
-            learner.setMdp(mdp);
 
             model.addAttribute("result", learnerRepository.save(learner));
         }
@@ -236,9 +234,7 @@ public class MainController {
             inscriptionActionRepository.save(inscriptionAction);
         }
 
-        model.addAttribute("learner", optionalLearner.get());
-        model.addAttribute("inscriptions",inscriptionRepository.getInscriptionOfLearner((Integer) session.getAttribute("id")));
-        return "apprenant/voir";
+        return GetInscription(inscription.getId(), model);
     }
 
     @GetMapping("/mission/{id}/delete")
@@ -257,15 +253,23 @@ public class MainController {
         if(optionalMission.isPresent()) {
             Mission mission = optionalMission.get();
             mission.setWording(wording);
+            missionRepository.save(mission);
 
-            model.addAttribute("result", missionRepository.save(mission));
+            model.addAttribute("message", "Mission mise à jour" );
+            return GetMissionUpdate(id, model);
         }
         else{
             model.addAttribute("MesErreurs","Mission introuvable");
             return "Erreur";
         }
+    }
 
-        return GetMissionUpdate(id, model);
+    @GetMapping("/mission/create")
+    public String GetMissionCreation(Model model) throws Exception {
+        Mission mission = new Mission();
+        mission = missionRepository.save(mission);
+
+        return GetMissionUpdate(mission.getId(), model);
     }
 
     // endregion [- Mission -]
@@ -301,6 +305,29 @@ public class MainController {
         return GetActionUpdate(action.getId(), model);
     }
 
+    @GetMapping("/mission/{id}/createAction")
+    public String GetActionMissionCreation(@PathVariable("id") Integer id, Model model) throws Exception {
+        Optional<Mission> optionalMission = missionRepository.findById(id);
+        if(optionalMission.isPresent()) {
+            Action action = new Action();
+            action.setWording("");
+            action.setScoreMinimum(0);
+            action = actionRepository.save(action);
+
+            ActionMission actionMission = new ActionMission();
+            actionMission.setId((int) actionMissionRepository.count());
+            actionMission.setFk_action(action);
+            actionMission.setFk_mission(optionalMission.get());
+            actionMissionRepository.save(actionMission);
+
+            return GetActionUpdate(action.getId(), model);
+        }
+        else{
+            model.addAttribute("MesErreurs","Mission introuvable");
+            return "Erreur";
+        }
+    }
+
     @GetMapping("/action/{id}/update")
     public String GetActionUpdate(@PathVariable("id") Integer id, Model model) throws Exception {
         model.addAttribute("updating",true);
@@ -321,6 +348,7 @@ public class MainController {
 
     @GetMapping("/action/{id}/delete")
     public String DeleteAction(@PathVariable("id") Integer id, Model model) throws Exception {
+        actionRepository.deleteActionMissionLinkedTo(id);
         actionRepository.deleteById(id);
 
         model.addAttribute("result", !actionRepository.findById(id).isPresent());
@@ -339,7 +367,8 @@ public class MainController {
             action.setWording(wording);
             action.setScoreMinimum(scoreMinimum);
 
-            model.addAttribute("result", actionRepository.save(action));
+            actionRepository.save(action);
+            model.addAttribute("message", "Action mise à jour" );
             return GetActionUpdate(action.getId(), model);
         }
         else{
@@ -362,16 +391,29 @@ public class MainController {
 
     @GetMapping("/indicator/create/{action_id}")
     public String GetIndicatorCreation(@PathVariable("action_id") Integer action_id, Model model) throws Exception {
-        return "indicator/create";
+        Optional<Action> action = actionRepository.findById(action_id);
+        if(action.isPresent()) {
+            Indicator indicator = new Indicator();
+            indicator.setFk_action(action.get());
+            indicator.setWording("wording");
+            indicator.setValueIfCheck(0);
+            indicator.setValueIfUnCheck(0);
+            indicatorRepository.save(indicator);
 
+            return GetActionUpdate(action.get().getId(), model);
+        }
+        else{
+            model.addAttribute("MesErreurs","Action introuvable");
+            return "Erreur";
+        }
     }
 
     @RequestMapping(value="/indicator/create/{action_id}", method = RequestMethod.POST)
     public String CreateIndicator(@PathVariable("action_id") Integer action_id,
-                               @RequestParam(name = "wording") String wording,
-                               @RequestParam(name = "valueifcheck") Integer valueifcheck,
-                               @RequestParam(name = "valueifuncheck") Integer valueifuncheck,
-                               Model model) throws Exception {
+                                  @RequestParam(name = "wording") String wording,
+                                  @RequestParam(name = "valueifcheck") Integer valueifcheck,
+                                  @RequestParam(name = "valueifuncheck") Integer valueifuncheck,
+                                  Model model) throws Exception {
         Optional<Action> action = actionRepository.findById(action_id);
         if(action.isPresent()) {
             Indicator indicator = new Indicator();
@@ -381,10 +423,10 @@ public class MainController {
             indicator.setValueIfUnCheck(valueifuncheck);
             indicatorRepository.save(indicator);
 
-            return GetAction(action.get().getId(), model);
+            return GetActionUpdate(action.get().getId(), model);
         }
         else{
-            model.addAttribute("MesErreurs","Indicateur introuvable");
+            model.addAttribute("MesErreurs","Action introuvable");
             return "Erreur";
         }
 
@@ -392,10 +434,10 @@ public class MainController {
 
     @RequestMapping(value="/indicator/{id}/update", method = RequestMethod.POST)
     public String UpdateIndicator(@PathVariable("id") Integer id,
-                               @RequestParam(name = "wording") String wording,
+                                  @RequestParam(name = "wording") String wording,
                                   @RequestParam(name = "valueifcheck") Integer valueifcheck,
                                   @RequestParam(name = "valueifuncheck") Integer valueifuncheck,
-                               Model model) throws Exception {
+                                  Model model) throws Exception {
         Optional<Indicator> optionalIndicator = indicatorRepository.findById(id);
         if(optionalIndicator.isPresent()){
             Indicator indicator = optionalIndicator.get();
@@ -403,7 +445,8 @@ public class MainController {
             indicator.setValueIfCheck(valueifcheck);
             indicator.setValueIfUnCheck(valueifuncheck);
             indicatorRepository.save(indicator);
-            return GetAction(indicator.getFk_action().getId(), model);
+            model.addAttribute("message", "Indicateur mis à jour" );
+            return GetActionUpdate(indicator.getFk_action().getId(), model);
         }
         else{
             model.addAttribute("MesErreurs","Indicateur introuvable");
@@ -414,6 +457,26 @@ public class MainController {
     }
 
     // endregion [- Indicators -]
+
+
+    // region [- Inscription -]
+
+    @GetMapping("/inscription/{id}")
+    public String GetInscription(@PathVariable("id") Integer id, Model model) throws Exception {
+        Optional<Inscription> inscription = inscriptionRepository.findById(id);
+        if(inscription.isPresent()) {
+            model.addAttribute("inscription", inscription.get());
+            model.addAttribute("actions",inscriptionActionRepository.getActionDuringInscription(id));
+
+            return "inscription/voir";
+        }
+        else{
+            model.addAttribute("MesErreurs","Inscription introuvable");
+            return "Erreur";
+        }
+    }
+
+    // endregion [- Inscription -]
 
 
 }

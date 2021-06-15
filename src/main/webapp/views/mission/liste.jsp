@@ -26,6 +26,7 @@
                         <span class="glyphicon glyphicon-eye-open"></span>
                         Voir
                     </a>
+                    <c:if test="${role eq \"admin\"}">
                     <a class="btn btn-warning" href="/mission/${mission.id}/update" role="button">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Modifier
@@ -34,6 +35,7 @@
                         <span class="glyphicon glyphicon-remove-circle"></span>
                         Supprimer
                     </a>
+                    </c:if>
                 </td>
             </tr>
         </c:forEach>
@@ -41,7 +43,7 @@
 </div>
 
 <div class="container">
-    <a class="btn btn-success" href="/mission/new" role="button">
+    <a class="btn btn-success" href="/mission/create" role="button">
         <span class="glyphicon glyphicon-plus"></span>
         Ajouter
     </a>

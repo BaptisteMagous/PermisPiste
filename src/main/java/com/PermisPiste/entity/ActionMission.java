@@ -8,6 +8,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "action__mission")
 public class ActionMission {
+    @Id
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "fk_action", referencedColumnName="id")
@@ -16,8 +18,6 @@ public class ActionMission {
     @ManyToOne
     @JoinColumn(name = "fk_mission", referencedColumnName="id")
     private Mission fk_mission;
-    @Id
-    private Integer id;
 
     public void setId(Integer id) {
         this.id = id;

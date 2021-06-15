@@ -6,7 +6,7 @@
 <%@include file="util/navigation.jsp"%>
 <form method="post" action="getLogin">
 <div class="col-md-12 well well-md">
-    <center><h1>Authentification</h1></center>
+    <h1>Authentification</h1>
     <div class="form-horizontal">    
         <div class="form-group">
             <label class="col-md-3 control-label">Identifiant : </label>
