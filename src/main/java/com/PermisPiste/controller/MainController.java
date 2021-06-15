@@ -90,7 +90,8 @@ public class MainController {
             model.addAttribute("inscriptions",inscriptionRepository.getInscriptionOfLearner(id));
         }
         else{
-            model.addAttribute("error","Apprennant introuvable");
+            model.addAttribute("MesErreurs","Apprennant introuvable");
+            return "Erreur";
         }
         return "apprenant/voir";
     }
@@ -150,7 +151,8 @@ public class MainController {
             model.addAttribute("result", learnerRepository.save(learner));
         }
         else{
-            model.addAttribute("error","Apprennant introuvable");
+            model.addAttribute("MesErreurs","Apprennant introuvable");
+            return "Erreur";
         }
 
 
@@ -175,7 +177,8 @@ public class MainController {
             model.addAttribute("actions",actionRepository.getActionOfMission(id));
         }
         else{
-            model.addAttribute("error","Mission introuvable");
+            model.addAttribute("MesErreurs","Mission introuvable");
+            return "Erreur";
         }
         return "mission/voir";
     }
@@ -260,7 +263,8 @@ public class MainController {
             model.addAttribute("result", missionRepository.save(mission));
         }
         else{
-            model.addAttribute("error","Mission introuvable");
+            model.addAttribute("MesErreurs","Mission introuvable");
+            return "Erreur";
         }
 
         return GetMissionUpdate(id, model);
@@ -281,11 +285,12 @@ public class MainController {
         if(action.isPresent()) {
             model.addAttribute("action",action.get());
             model.addAttribute("indicators",indicatorRepository.getIndicatorsOfAction(id));
+            return "action/voir";
         }
         else{
-            model.addAttribute("error","Action introuvable");
+            model.addAttribute("MesErreurs","Action introuvable");
+            return "Erreur";
         }
-        return "action/voir";
     }
 
     @GetMapping("/action/create")
@@ -340,7 +345,7 @@ public class MainController {
             return GetActionUpdate(action.getId(), model);
         }
         else{
-            model.addAttribute("error","Action introuvable");
+            model.addAttribute("MesErreurs","Action introuvable");
             return "Erreur";
         }
 
@@ -381,7 +386,7 @@ public class MainController {
             return GetAction(action.get().getId(), model);
         }
         else{
-            model.addAttribute("error","Indicateur introuvable");
+            model.addAttribute("MesErreurs","Indicateur introuvable");
             return "Erreur";
         }
 
@@ -403,7 +408,7 @@ public class MainController {
             return GetAction(indicator.getFk_action().getId(), model);
         }
         else{
-            model.addAttribute("error","Indicateur introuvable");
+            model.addAttribute("MesErreurs","Indicateur introuvable");
             return "Erreur";
         }
 
