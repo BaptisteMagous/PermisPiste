@@ -29,7 +29,7 @@ public class MainController {
     private LearnerRepository learnerRepository;
     @Autowired
     private MissionRepository missionRepository;
-
+/*
     @GetMapping("/actions")
     @ResponseBody
     public List<Action> showAllActions(){
@@ -49,7 +49,7 @@ public class MainController {
         action.setWording(wording);
         action.setScoreMinimum(scoreMinimum);
         return actionRepository.save(action);
-    }
+    }*/
 
     @GetMapping("/")
     public String showIndex(HttpServletRequest request, HttpServletResponse response) throws Exception {
