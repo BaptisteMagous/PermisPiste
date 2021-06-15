@@ -58,13 +58,13 @@ public class MainController {
 
     // region [- Apprenant -]
 
-    @GetMapping("/getListApprenant")
+    @GetMapping("/apprenant/liste")
     public String getListApprenant(Model model) throws Exception {
         model.addAttribute("apprenants",learnerRepository.findAll());
         return "apprenant/liste";
     }
 
-    @GetMapping("/getApprenant/{id}")
+    @GetMapping("/apprenant/{id}")
     public String GetApprenant(@PathVariable("id") Integer id, Model model) throws Exception {
         Optional<Learner> learner = learnerRepository.findById(id);
         if(learner.isPresent()) {
@@ -74,10 +74,16 @@ public class MainController {
         else{
             model.addAttribute("error","Apprennant introuvable");
         }
-        return "getApprenant";
+        return "apprenant/voir";
     }
 
-    @GetMapping("/createApprenant/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
+    @GetMapping("/apprenant/update/{id}")
+    public String GetApprenantUpdate(@PathVariable("id") Integer id, Model model) throws Exception {
+        model.addAttribute("updating",true);
+        return GetApprenant(id, model);
+    }
+
+    @GetMapping("/apprenant/create/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
     public String CreateApprenant(@PathVariable("surname") String surname,
                                   @PathVariable("forname") String forname,
                                   @PathVariable("salt") String salt,
@@ -94,19 +100,19 @@ public class MainController {
 
         model.addAttribute("result",learnerRepository.save(learner));
 
-        return "createApprennant";
+        return "apprenant/created";
     }
 
-    @GetMapping("/deleteApprenant/{id}")
+    @GetMapping("/apprenant/delete/{id}")
     public String DeleteApprenant(@PathVariable("id") Integer id, Model model){
         learnerRepository.deleteById(id);
 
         model.addAttribute("result", !learnerRepository.findById(id).isPresent());
 
-        return "deleteApprennant";
+        return "apprenant/deleted";
     }
 
-    @GetMapping("/updateApprenant/{id}/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
+    @GetMapping("/apprenant/{id}/update/{surname}/{forname}/{salt}/{email}/{mdp}/{role}")
     public String UpdateApprenant(@PathVariable("id") Integer id,
                                   @PathVariable("surname") String surname,
                                   @PathVariable("forname") String forname,
@@ -131,19 +137,19 @@ public class MainController {
 
 
 
-        return "updateApprennant";
+        return "apprenant/updated";
     }
 
     // endregion Apprennant
 
     // region [- Mission -]
-    @GetMapping("/getListMission")
+    @GetMapping("/mission/liste")
     public String GetListMission(Model model) throws Exception {
         model.addAttribute("missions", missionRepository.findAll());
-        return "listMissions";
+        return "mission/liste";
     }
 
-    @GetMapping("/getMission/{id}")
+    @GetMapping("/mission/{id}")
     public String GetMission(@PathVariable("id") Integer id, Model model) throws Exception {
         Optional<Mission> mission = missionRepository.findById(id);
         if(mission.isPresent()) {
@@ -153,7 +159,13 @@ public class MainController {
         else{
             model.addAttribute("error","Mission introuvable");
         }
-        return "getMission";
+        return "mission/voir";
+    }
+
+    @GetMapping("/mission/{id}/update")
+    public String GetMissionUpdate(@PathVariable("id") Integer id, Model model) throws Exception {
+        model.addAttribute("updating",true);
+        return GetMission(id, model);
     }
 
     @GetMapping("/createMission/{wording}")
@@ -163,7 +175,7 @@ public class MainController {
 
         model.addAttribute("result",missionRepository.save(mission));
 
-        return "createMission";
+        return "mission/created";
     }
 
     @GetMapping("/deleteMission/{id}")
@@ -172,7 +184,7 @@ public class MainController {
 
         model.addAttribute("result", !missionRepository.findById(id).isPresent());
 
-        return "deleteMission";
+        return "mission/deleted";
     }
 
     @GetMapping("/updateMission/{id}/{wording}")
@@ -189,19 +201,19 @@ public class MainController {
             model.addAttribute("error","Mission introuvable");
         }
 
-        return "updateMission";
+        return "mission/updated";
     }
 
     // endregion [- Mission -]
 
     // region [- Action -]
-    @GetMapping("/getListAction")
+    @GetMapping("/action")
     public String GetListAction(Model model) throws Exception {
         model.addAttribute("actions", actionRepository.findAll());
-        return "listActions";
+        return "action/liste";
     }
 
-    @GetMapping("/getAction/{id}")
+    @GetMapping("/action/{id}")
     public String GetAction(@PathVariable("id") Integer id, Model model) throws Exception {
         Optional<Action> action = actionRepository.findById(id);
         if(action.isPresent()) {
@@ -211,10 +223,16 @@ public class MainController {
         else{
             model.addAttribute("error","Action introuvable");
         }
-        return "getAction";
+        return "action/voir";
     }
 
-    @GetMapping("/createAction/{wording}/{scoreMinimum}")
+    @GetMapping("/action/{id}/update")
+    public String GetActionUpdate(@PathVariable("id") Integer id, Model model) throws Exception {
+        model.addAttribute("updating",true);
+        return GetAction(id, model);
+    }
+
+    @GetMapping("/action/create/{wording}/{scoreMinimum}")
     public String CreateAction(@PathVariable("wording") String wording,
                                @PathVariable("scoreMinimum") Integer scoreMinimum,
                                Model model){
@@ -224,19 +242,19 @@ public class MainController {
 
         model.addAttribute("result",actionRepository.save(action));
 
-        return "createAction";
+        return "action/created";
     }
 
-    @GetMapping("/deleteAction/{id}")
+    @GetMapping("/action/{id}/delete")
     public String DeleteAction(@PathVariable("id") Integer id, Model model){
         actionRepository.deleteById(id);
 
         model.addAttribute("result", !actionRepository.findById(id).isPresent());
 
-        return "deleteAction";
+        return "action/deleted";
     }
 
-    @GetMapping("/updateAction/{id}/{wording}/{scoreMinimum}")
+    @GetMapping("/action/{id}/update/{wording}/{scoreMinimum}")
     public String UpdateAction(@PathVariable("id") Integer id,
                                @PathVariable("wording") String wording,
                                @PathVariable("scoreMinimum") Integer scoreMinimum,
@@ -253,10 +271,10 @@ public class MainController {
             model.addAttribute("error","Action introuvable");
         }
 
-        return "updateAction";
+        return "action/updated";
     }
 
-    // endregion [- Mission -]
+    // endregion [- Actions -]
 
 
 }
