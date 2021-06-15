@@ -194,60 +194,66 @@ public class MainController {
 
     // endregion [- Mission -]
 
-    // region [- Mission -]
-    @GetMapping("/getListMission")
-    public String GetListMission(Model model) throws Exception {
-        model.addAttribute("missions", missionRepository.findAll());
-        return "listMissions";
+    // region [- Action -]
+    @GetMapping("/getListAction")
+    public String GetListAction(Model model) throws Exception {
+        model.addAttribute("actions", actionRepository.findAll());
+        return "listActions";
     }
 
-    @GetMapping("/getMission/{id}")
-    public String GetMission(@PathVariable("id") Integer id, Model model) throws Exception {
-        Optional<Mission> mission = missionRepository.findById(id);
-        if(mission.isPresent()) {
-            model.addAttribute("mission",mission.get());
-            model.addAttribute("actions",actionRepository.getActionOfMission(id));
+    @GetMapping("/getAction/{id}")
+    public String GetAction(@PathVariable("id") Integer id, Model model) throws Exception {
+        Optional<Action> action = actionRepository.findById(id);
+        if(action.isPresent()) {
+            model.addAttribute("action",action.get());
+            model.addAttribute("indicators",indicatorRepository.getIndicatorsOfAction(id));
         }
         else{
-            model.addAttribute("error","Mission introuvable");
+            model.addAttribute("error","Action introuvable");
         }
-        return "getMission";
+        return "getAction";
     }
 
-    @GetMapping("/createMission/{wording}")
-    public String CreateMission(@PathVariable("wording") String wording, Model model){
-        Mission mission = new Mission();
-        mission.setWording(wording);
+    @GetMapping("/createAction/{wording}/{scoreMinimum}")
+    public String CreateAction(@PathVariable("wording") String wording,
+                               @PathVariable("scoreMinimum") Integer scoreMinimum,
+                               Model model){
+        Action action = new Action();
+        action.setWording(wording);
+        action.setScoreMinimum(scoreMinimum);
 
-        model.addAttribute("result",missionRepository.save(mission));
+        model.addAttribute("result",actionRepository.save(action));
 
-        return "createMission";
+        return "createAction";
     }
 
-    @GetMapping("/deleteMission/{id}")
-    public String DeleteMission(@PathVariable("id") Integer id, Model model){
-        missionRepository.deleteById(id);
+    @GetMapping("/deleteAction/{id}")
+    public String DeleteAction(@PathVariable("id") Integer id, Model model){
+        actionRepository.deleteById(id);
 
-        model.addAttribute("result", !missionRepository.findById(id).isPresent());
+        model.addAttribute("result", !actionRepository.findById(id).isPresent());
 
-        return "deleteMission";
+        return "deleteAction";
     }
 
-    @GetMapping("/updateMission/{id}/{wording}")
-    public String UpdateMission(@PathVariable("id") Integer id,
-                                @PathVariable("wording") String wording, Model model){
-        Optional<Mission> optionalMission = missionRepository.findById(id);
-        if(optionalMission.isPresent()) {
-            Mission mission = optionalMission.get();
-            mission.setWording(wording);
+    @GetMapping("/updateAction/{id}/{wording}/{scoreMinimum}")
+    public String UpdateAction(@PathVariable("id") Integer id,
+                               @PathVariable("wording") String wording,
+                               @PathVariable("scoreMinimum") Integer scoreMinimum,
+                               Model model){
+        Optional<Action> optionalAction = actionRepository.findById(id);
+        if(optionalAction.isPresent()) {
+            Action action = optionalAction.get();
+            action.setWording(wording);
+            action.setScoreMinimum(scoreMinimum);
 
-            model.addAttribute("result", learnerRepository.save(learner));
+            model.addAttribute("result", actionRepository.save(action));
         }
         else{
-            model.addAttribute("error","Mission introuvable");
+            model.addAttribute("error","Action introuvable");
         }
 
-        return "updateMission";
+        return "updateAction";
     }
 
     // endregion [- Mission -]
