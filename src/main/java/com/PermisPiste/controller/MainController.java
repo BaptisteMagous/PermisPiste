@@ -247,7 +247,7 @@ public class MainController {
         return GetListMission(model);
     }
 
-    @GetMapping("/mission/{id}/update")
+    @RequestMapping(value = "/mission/{id}/update", method = RequestMethod.POST)
     public String UpdateMission(@PathVariable("id") Integer id,
                                 @RequestParam(name = "wording") String wording, Model model) throws Exception {
         Optional<Mission> optionalMission = missionRepository.findById(id);
